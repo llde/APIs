@@ -69,7 +69,6 @@ public class NocturnalJOB<V> extends FutureTask<V> {
         super.run();
         if (listeners != null) {
             try {
-                //Keep or not keep this is the dilemma.
                 listeners.forEach((listener) -> listener.done(this));
             } catch (Throwable th) {
                 th.printStackTrace();

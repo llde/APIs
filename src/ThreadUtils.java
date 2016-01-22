@@ -14,6 +14,8 @@ public class ThreadUtils {
 
     private static final List<WeakReference<ExecutorService>> executorServiceList = new ArrayList<>();
 
+    private static final List<String> auth = new ArrayList<>();
+
     public static synchronized Thread createTrackThread(Runnable run){
         Thread t = new Thread(run);
         threadList.add(new WeakReference<>(t));
@@ -22,11 +24,12 @@ public class ThreadUtils {
 
 
     public static synchronized <T extends ExecutorService>  T  TrackExecutor(T executorservice){
-        executorServiceList.add(new WeakReference<ExecutorService>(executorservice));
+        executorServiceList.add(new WeakReference<>(executorservice));
         return executorservice;
     }
 
     public static  synchronized void dispose(boolean isJavaFXApp){
+        if(!auth.contains(Thread.currentThread().getStackTrace()[2].getClassName())) throw new RuntimeException("Classe o metodo non autorizzato");
         if(!threadList.isEmpty()){
             for(WeakReference<Thread> t: threadList){
                 Thread x = t.get();
